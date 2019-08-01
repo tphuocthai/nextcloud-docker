@@ -29,8 +29,7 @@ services:
       - ./conf.d:/etc/nginx/conf.d
       - ./ssl:/etc/nginx/ssl
       - /etc/letsencrypt:/etc/letsencrypt
-    volumes_from:
-      - app
+      - nextcloud:/var/www/html
     depends_on:
       - app
     ports:
@@ -42,9 +41,9 @@ volumes:
     driver: local
     driver_opts:
       type: bind
-      device: /usr/share/nginx/html
+      device: ${WEB_ROOT_PATH}
   db:
     driver: local
     driver_opts:
       type: bind
-      device: /media/data/mariadb
+      device: ${DB_STORE_PATH}
