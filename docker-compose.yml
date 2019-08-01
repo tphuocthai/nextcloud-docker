@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  db:
+    image: mariadb
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    restart: always
+    volumes:
+      - db:/var/lib/mysql
+    env_file:
+      - .env
+
+  app:
+    image: nextcloud:fpm
+    restart: always
+    depends_on:
+      - db
+    volumes:
+      - nextcloud:/var/www/html
+    environment:
+      - MYSQL_HOST=db
+    env_file:
+      - .env
+
+  nginx:
+    image: nginx
+    restart: always
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d
+      - ./ssl:/etc/nginx/ssl
+      - /etc/letsencrypt:/etc/letsencrypt
+    volumes_from:
+      - app
+    depends_on:
+      - app
+    ports:
+      - 80:80
+      - 443:443
+
+volumes:
+  nextcloud:
+    driver: local
+    driver_opts:
+      type: bind
+      device: /usr/share/nginx/html
+  db:
+    driver: local
+    driver_opts:
+      type: bind
+      device: /media/data/mariadb
