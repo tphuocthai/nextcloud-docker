@@ -16,7 +16,20 @@
     sudo usermod -aG docker $USER
    ```
 
-4. Setup nginx
+
+2. Set environment variables
+  Create `.env` file in current directory with following contents (set your password)
+  ```
+  MYSQL_ROOT_PASSWORD=
+  MYSQL_PASSWORD=
+  MYSQL_DATABASE=nextcloud
+  MYSQL_USER=nextcloud
+  DB_STORE_PATH=/media/data/mariadb
+  WEB_ROOT_PATH=/usr/share/nginx/html
+  ```
+
+
+3. Setup nginx
   Generate dhparams
   ```
   sudo openssl dhparam -out ./ssl/dhparams.pem 2048
